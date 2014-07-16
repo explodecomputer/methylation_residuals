@@ -32,11 +32,11 @@ print(c(first, last))
 
 for(i in first:last)
 {
-	grmfile <- paste("~/repo/methylation_residuals/data/alspac_hm3_", params$group[i], "_unrelated_m", sep="")
-	allphenfile <- paste("~/repo/methylation_residuals/data/ALN.tost.betas.", params$timepoint[i], ".OCT.ranktransformed.txt", sep="")
-	phenfile <- paste("~/repo/methylation_residuals/results/", params$timepoint[i], "/", params$cpg[i], ".phen", sep="")
-	idfile <- paste("~/repo/methylation_residuals/data/", params$group[i], ".id", sep="")
+	grmfile <- paste("~/repo/methylation_residuals/data/", params$timepoint[i], sep="")
+	allphenfile <- paste("~/repo/methylation_residuals/data/", params$timepoint[i], ".phen", sep="")
+	idfile <- paste("~/repo/methylation_residuals/data/", params$timepoint[i], ".id", sep="")
 	outfile <- paste("~/repo/methylation_residuals/results/", params$timepoint[i], "/", params$cpg[i], sep="")
+	phenfile <- paste("~/repo/methylation_residuals/results/", params$timepoint[i], "/", params$cpg[i], ".phen", sep="")
 
 	makePhen(allphenfile, idfile, params$index[i], phenfile)
 	runGcta(grmfile, phenfile, outfile)
