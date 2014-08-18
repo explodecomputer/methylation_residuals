@@ -15,12 +15,42 @@ runGcta <- function(grmfile, phenfile, outfile, flags="")
 	system(cmd)
 }
 
+readPreds <- function(rootname)
+{
+	filename <- paste(rootname, ".indi.blp", sep="")
+	if(file.exists(filename))
+	{
+		a <- read.table(filename, colClass=c("character", "character", "numeric", "numeric", "numeric", "numeric"))
+	}
+}
+
+readHsqs <- function(rootname)
+{
+	filename <- paste(rootname, ".hsq", sep="")
+	if(file.exists(filename))
+	{
+		a <- read.table(filename, he=T, fill=TRUE)
+		return(a)
+	} else {
+		return(NULL)
+	}
+}
+
+removeFiles <- function(rootname)
+{
+	a <- paste(rootname, c(".phen", ".hsq", ".indi.blp"), sep="")
+	unlink(a)
+}
+
+
 arguments <- commandArgs(T)
 jid <- as.numeric(arguments[1])
 nrun <- as.numeric(arguments[2])
 
 first <- (jid - 1) * nrun + 1
 last <- min(nrow(params), jid * nrun)
+
+savefile <- paste("~/repo/methylation_residuals/res/results", jid, ".RData", sep="")
 
 print(c(first, last))
 
@@ -30,14 +60,25 @@ print(c(first, last))
 # phenroot <- "~/repo/methylation_residuals/results/TIMEPOINT/CPG.phen"
 # outroot <- "~/repo/methylation_residuals/results/TIMEPOINT/CPG"
 
+preds <- list()
+hsqs <- list()
+
 for(i in first:last)
 {
-	grmfile <- paste("~/repo/methylation_residuals/data/", params$timepoint[i], sep="")
-	allphenfile <- paste("~/repo/methylation_residuals/data/", params$timepoint[i], ".phen", sep="")
-	idfile <- paste("~/repo/methylation_residuals/data/", params$timepoint[i], ".id", sep="")
-	outfile <- paste("~/repo/methylation_residuals/results/", params$timepoint[i], "/", params$cpg[i], sep="")
-	phenfile <- paste("~/repo/methylation_residuals/results/", params$timepoint[i], "/", params$cpg[i], ".phen", sep="")
-
-	makePhen(allphenfile, idfile, params$index[i], phenfile)
-	runGcta(grmfile, phenfile, outfile)
+	cat(i, "\n")
+	outfile <- paste("~/repo/methylation_residuals/res/", params$timepoint[i], "/", params$cpg[i], sep="")
+	if(!file.exists(paste(outfile, ".hsq", sep="")))
+	{
+		grmfile <- paste("~/repo/methylation_residuals/data/", params$timepoint[i], sep="")
+		allphenfile <- paste("~/repo/methylation_residuals/data/", params$timepoint[i], ".phen", sep="")
+		idfile <- paste("~/repo/methylation_residuals/data/", params$timepoint[i], ".id", sep="")
+		phenfile <- paste("~/repo/methylation_residuals/res/", params$timepoint[i], "/", params$cpg[i], ".phen", sep="")
+		makePhen(allphenfile, idfile, params$index[i], phenfile)
+		runGcta(grmfile, phenfile, outfile)
+		preds[[i]] <- readPreds(outfile)
+		hsqs[[i]] <- readHsqs(outfile)
+		removeFiles(outfile)
+	}
 }
+
+save(preds, hsqs, file=savefile)
