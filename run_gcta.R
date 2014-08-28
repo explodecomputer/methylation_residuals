@@ -1,5 +1,3 @@
-load("~/repo/methylation_residuals/data/parameters.RData")
-
 makePhen <- function(allphenfile, idfile, row, phenfile)
 {
 	cmd <- paste("head -n ", row, " ", allphenfile, " | tail -n 1 | tr ' ' '\n' > ", phenfile, ".temp", sep="")
@@ -43,14 +41,18 @@ removeFiles <- function(rootname)
 }
 
 
+
 arguments <- commandArgs(T)
 jid <- as.numeric(arguments[1])
 nrun <- as.numeric(arguments[2])
 
+savefile1 <- paste("~/repo/methylation_residuals/res/results_hsq", jid, ".RData", sep="")
+savefile2 <- paste("~/repo/methylation_residuals/res/results_pred", jid, ".RData", sep="")
+
+load("~/repo/methylation_residuals/data/parameters.RData")
 first <- (jid - 1) * nrun + 1
 last <- min(nrow(params), jid * nrun)
 
-savefile <- paste("~/repo/methylation_residuals/res/results", jid, ".RData", sep="")
 
 print(c(first, last))
 
@@ -62,7 +64,8 @@ print(c(first, last))
 
 preds <- list()
 hsqs <- list()
-
+nom <- list()
+j <- 1
 for(i in first:last)
 {
 	cat(i, "\n")
@@ -75,10 +78,13 @@ for(i in first:last)
 		phenfile <- paste("~/repo/methylation_residuals/res/", params$timepoint[i], "/", params$cpg[i], ".phen", sep="")
 		makePhen(allphenfile, idfile, params$index[i], phenfile)
 		runGcta(grmfile, phenfile, outfile)
-		preds[[i]] <- readPreds(outfile)
-		hsqs[[i]] <- readHsqs(outfile)
+		nom[[j]] <- c(params$cpg[i], params$timepoint[i])
+		preds[[j]] <- readPreds(outfile)
+		hsqs[[j]] <- readHsqs(outfile)
+		j <- j + 1
 		removeFiles(outfile)
 	}
 }
 
-save(preds, hsqs, file=savefile)
+save(nom, hsqs, file=savefile1)
+save(nom, preds, file=savefile2)
