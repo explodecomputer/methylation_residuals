@@ -49,10 +49,9 @@ lines(y ~ x, col="red")
 dev.off()
 
 
+a <- ddply(dat, .(timepoint), function(x) quantile(x$hsq))
+b <- ddply(dat2, .(timepoint), function(x) quantile(x$hsq))
+write.table(a, file="~/repo/methylation_residuals/images/h2_estimates.csv", row=F, col=T, qu=F, sep=",")
+write.table(b, file="~/repo/methylation_residuals/images/h2_estimates_non0.csv", row=F, col=T, qu=F, sep=",")
 
-geom_density(aes(fill=timepoint)) +
-scale_x_log10()
 
-stat_density(aes(ymax = ..density..,  ymin = -..density..),
-    fill = "grey50", colour = "grey50",
-    geom = "ribbon", position = "identity")
