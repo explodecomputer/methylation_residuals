@@ -19,7 +19,7 @@ ggplot(dat, aes(x=hsq)) +
 geom_density() +
 facet_grid(timepoint ~ .) +
 geom_vline(data=s, aes(xintercept=ave), colour="red") +
-labs(y = "Density", x="Heritability estimate")
+labs(y = "Density", x="SNP heritability")
 ggsave(file="~/repo/methylation_residuals/images/distributions.pdf", width=5, height=7)
 
 dat2 <- subset(dat, hsq != 1e-6)
