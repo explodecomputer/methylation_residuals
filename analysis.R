@@ -13,12 +13,13 @@ summary(lm(hsq ~ as.numeric(timepoint), dat))
 summary(lm(hsq ~ as.numeric(timepoint) + I(as.numeric(timepoint)^2), dat))
 
 
-s <- ddply(dat, .(timepoint), summarise, ave = mean(hsq), se = sd(hsq) / sqrt(mean(n)))
+s <- ddply(dat, .(timepoint), summarise, ave = mean(hsq), med=median(hsq), se = sd(hsq) / sqrt(mean(n)))
+s <- reshape(s, direction="long", idvar="timepoint", varying=list(c("ave", "med")), times=c("Mean", "Median"))
 
 ggplot(dat, aes(x=hsq)) +
 geom_density() +
 facet_grid(timepoint ~ .) +
-geom_vline(data=s, aes(xintercept=ave), colour="red") +
+geom_vline(data=s, aes(xintercept=ave, colour=time)) +
 labs(y = "Density", x="SNP heritability")
 ggsave(file="~/repo/methylation_residuals/images/distributions.pdf", width=5, height=7)
 
