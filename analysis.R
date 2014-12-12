@@ -19,8 +19,10 @@ s <- reshape(s, direction="long", idvar="timepoint", varying=list(c("ave", "med"
 ggplot(dat, aes(x=hsq)) +
 geom_density() +
 facet_grid(timepoint ~ .) +
-geom_vline(data=s, aes(xintercept=ave, colour=time)) +
-labs(y = "Density", x="SNP heritability")
+geom_linerange(data=s, aes(x=ave, ymax=17, ymin=0, colour=time)) +
+labs(y = "Density", x="SNP heritability") +
+geom_text(data=s, aes(y=20, x=ave, label=round(ave, 3), colour=time), size=2) +
+labs(colour="Average") 
 ggsave(file="~/repo/methylation_residuals/images/distributions.pdf", width=5, height=7)
 
 dat2 <- subset(dat, hsq != 1e-6)
