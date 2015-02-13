@@ -20,4 +20,4 @@ fi
 
 i=${PBS_ARRAYID}
 
-Rscript ~/repo/methylation_residuals/aggregate_hsq.R ${i}
+Rscript ~/repo/methylation_residuals/aggregate_ct_hsq.R ${i}

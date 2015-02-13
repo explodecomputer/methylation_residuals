@@ -4,14 +4,20 @@ a1 <- list()
 a2 <- list()
 a3 <- list()
 a4 <- list()
-for(i in 1:122)
+a5 <- list()
+a6 <- list()
+a7 <- list()
+for(i in 1:91)
 {
 	cat(i, "\n")
 	load(paste("allres", i, ".RData", sep=""))
 	a1[[i]] <- unlist(l1)
 	a2[[i]] <- unlist(l2)
 	a3[[i]] <- unlist(l3)
-	a4[[i]] <- do.call(rbind, l4)
+	a4[[i]] <- unlist(l4)
+	a5[[i]] <- unlist(l5)
+	a6[[i]] <- unlist(l6)
+	a7[[i]] <- do.call(rbind, l7)
 }
 
 load("../data/parameters.RData")
@@ -20,13 +26,16 @@ load("../data/parameters.RData")
 f1 <- unlist(a1)
 f2 <- unlist(a2)
 f3 <- unlist(a3)
-f4 <- data.frame(do.call(rbind, a4))
+f4 <- unlist(a4)
+f5 <- unlist(a5)
+f6 <- unlist(a6)
+f7 <- data.frame(do.call(rbind, a7))
 
-names(f4) <- c("CPG", "timepoint")
+names(f7) <- c("CPG", "timepoint")
 
-dat <- data.frame(hsq=f1, se=f2, n=f3, f4)
+dat <- data.frame(hsq1=f1, se1=f2, hsq2=f3, se2=f4, n=f5, f7)
 dat$timepoint <- factor(dat$timepoint, levels=c("cord", "F7", "15up", "antenatal", "FOM"))
 
-save(dat, file="../hsq_aries.RData")
+save(dat, file="../hsq_ct_aries.RData")
 
 
