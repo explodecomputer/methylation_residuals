@@ -1,4 +1,4 @@
-library(plyr)
+library(dplyr)
 
 wd <- "~/repo/mQTL-partitioning/filter_run5_gwas/data"
 timepoint <- c("15up", "antenatal", "cord", "F7", "FOM")
@@ -39,9 +39,24 @@ for(i in 1:length(timepoint))
 	b[[i]] <- a
 }
 
-qtldat <- rbind.fill(b)
+qtldat <- rbind_all(b)
 index <- which(is.na(qtldat$varexp))
 mod <- interpolateMod(800)
 qtldat$varexp[index] <- inferInterpolate(qtldat$pval[index], mod)
 
-save(qtldat, file="~/repo/methylation_residuals/data/varexp.RData")
+qtldat <- subset(qtldat, select=c(CPG, timepoint, Trans, varexp))
+levels(qtldat$Trans) <- c("hsq1", "hsq2")
+
+qd <- group_by(qtldat, CPG, timepoint, Trans)
+qd <- summarise(qd, varexp=sum(varexp))
+
+qd2 <- group_by(qd, CPG, timepoint)
+qd2 <- summarise(qd2, varexp=sum(varexp))
+
+qd2$Trans <- "hsq"
+
+qd2 <- subset(qd2, select=c(CPG, timepoint, Trans, varexp))
+qd <- rbind(qd, qd2)
+
+
+save(qd, file="~/repo/methylation_residuals/data/varexp.RData")
