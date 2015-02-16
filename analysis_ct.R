@@ -56,6 +56,7 @@ ggsave(file="~/repo/methylation_residuals/images/h2_partition_cistrans.pdf")
 
 summary(lm(value ~ Feature + timepoint, subset(datl, variable=="Total"&experiment=="SNP heritability")))
 summary(lm(value ~ Feature + timepoint, subset(datl, variable=="Cis"&experiment=="SNP heritability")))
+summary(lm(value ~ Feature + timepoint, subset(datl, variable=="Trans"&experiment=="SNP heritability")))
 summary(lm(value ~ Feature * as.numeric(timepoint), subset(datl, variable=="Cis"&experiment=="SNP heritability")))
 summary(lm(value ~ Feature * timepoint, subset(datl, variable=="Cis"&experiment=="SNP heritability")))
 # No interaction between h2 and time point, just take childhood for simplicity
@@ -65,6 +66,10 @@ p2 <- group_by(subset(datl, experiment == "SNP heritability" & timepoint == "Chi
 p2 <- summarise(p2, ave = mean(value), med=median(value), se = sqrt(var(value) / length(value)), c05 = quantile(value, c(0.25)), c95 = quantile(value, 0.75))
 p2$Feature <- factor(p2$Feature, levels=levels(p2$Feature)[order(p2$ave)])
 
+p3 <- group_by(subset(datl, experiment == "SNP heritability" & timepoint == "Childhood"), Feature, variable)
+p3 <- summarise(p3, ave = mean(value), med=median(value), se = sqrt(var(value) / length(value)), c05 = quantile(value, c(0.25)), c95 = quantile(value, 0.75))
+p3$Feature <- factor(p3$Feature, levels=levels(p3$Feature)[order(p3$ave[p3$variable=="Cis"])])
+
 ggplot(p2, aes(y=ave, x=Feature)) +
 geom_bar(stat="identity") +
 geom_errorbar(aes(ymax=ave+se, ymin=ave-se, width=0.2)) +
@@ -72,3 +77,12 @@ geom_hline(data=subset(p1, experiment=="SNP heritability" & timepoint == "Childh
 theme(axis.text.x=element_text(angle=90, hjust=1, vjust=0.5), axis.ticks.x=element_blank()) +
 labs(x="", y="Cis SNP heritability")
 ggsave(file="~/repo/methylation_residuals/images/cis_h2_features.pdf")
+
+ggplot(subset(p3, variable!="Total"), aes(y=ave, x=Feature)) +
+geom_bar(stat="identity") +
+geom_errorbar(aes(ymax=ave+se, ymin=ave-se, width=0.2)) +
+geom_hline(data=subset(p1, experiment=="SNP heritability" & timepoint == "Childhood" & variable != "Total"), aes(yintercept=ave)) +
+facet_grid(variable ~ ., scale="free_y") +
+theme(axis.text.x=element_text(angle=90, hjust=1, vjust=0.5), axis.ticks.x=element_blank()) +
+labs(x="", y="Mean SNP heritability")
+ggsave(file="~/repo/methylation_residuals/images/h2_features.pdf")
