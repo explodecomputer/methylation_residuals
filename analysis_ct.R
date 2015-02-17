@@ -15,7 +15,7 @@ library(dplyr)
 library(reshape2)
 
 
-load("~/repo/methylation_residuals/data/datl_v1.RData")
+load("~/repo/methylation_residuals/data/datl_v2.RData")
 
 # total h2 divided into cis and trans for each time point
 
