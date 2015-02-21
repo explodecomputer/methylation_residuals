@@ -16,6 +16,9 @@ library(reshape2)
 
 
 load("~/repo/methylation_residuals/data/datl_v1.RData")
+load("~/repo/mQTL-partitioning/filter_run5_gwas/data/condanal_results.RData")
+naeem <- subset(condres, select=c(CPG, keep))
+datl <- merge(datl, naeem, by="CPG")
 
 # total h2 divided into cis and trans for each time point
 
@@ -86,3 +89,20 @@ facet_grid(variable ~ ., scale="free_y") +
 theme(axis.text.x=element_text(angle=90, hjust=1, vjust=0.5), axis.ticks.x=element_blank()) +
 labs(x="", y="Mean SNP heritability")
 ggsave(file="~/repo/methylation_residuals/images/h2_features.pdf")
+
+
+
+temp1 <- subset(datl, variable=="Cis", select=c(CPG, timepoint, value, experiment, keep))
+temp1 <- temp1[order(temp1$CPG, temp1$timepoint, temp1$experiment),]
+
+temp1a <- subset(temp1, experiment=="mQTL")
+temp1b <- subset(temp1, experiment!="mQTL")
+
+plot(temp1a$value ~ temp1b$value, alpha=0.1)
+temp1a$value2 <- temp1b$value
+
+ggplot(temp1a, aes(x=value2, y=value)) +
+geom_point(alpha=0.2) +
+facet_grid(keep ~ .) +
+labs(x="Cis SNP h2", y="Cis meQTL h2")
+ggsave(file="~/repo/methylation_residuals/images/cis_naeem.png")
