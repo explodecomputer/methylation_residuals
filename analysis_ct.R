@@ -15,7 +15,7 @@ library(dplyr)
 library(reshape2)
 
 
-load("~/repo/methylation_residuals/data/datl_v1.RData")
+load("~/repo/methylation_residuals/data/datl_v2.RData")
 load("~/repo/mQTL-partitioning/filter_run5_gwas/data/condanal_results.RData")
 naeem <- subset(condres, select=c(CPG, keep))
 datl <- merge(datl, naeem, by="CPG")

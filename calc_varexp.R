@@ -82,6 +82,7 @@ for(i in 1:length(timepoint))
 }
 
 qtldat <- rbind_all(b)
+qtldat <- subset(qtldat, pval < 1.25e-13)
 index <- which(is.na(qtldat$varexp))
 mod <- interpolateMod(800)
 qtldat$varexp[index] <- inferInterpolate(qtldat$pval[index], mod)
@@ -107,6 +108,6 @@ annot <- subset(annot, select=c(V1, V8))
 names(annot) <- c("CPG", "Feature")
 
 
-datl <- harmoniseDat(qd, dat)
-save(datl, file="~/repo/methylation_residuals/data/datl_v1.RData")
+datl <- harmoniseDat(qd, dat, annot)
+save(datl, file="~/repo/methylation_residuals/data/datl_v2.RData")
 save(qd, file="~/repo/methylation_residuals/data/varexp.RData")
