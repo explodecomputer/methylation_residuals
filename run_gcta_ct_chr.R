@@ -54,8 +54,8 @@ arguments <- commandArgs(T)
 jid <- as.numeric(arguments[1])
 nrun <- as.numeric(arguments[2])
 
-savefile1 <- paste("~/repo/methylation_residuals/res/results_ct_hsq", jid, ".RData", sep="")
-savefile2 <- paste("~/repo/methylation_residuals/res/results_ct_pred", jid, ".RData", sep="")
+savefile1 <- paste("~/repo/methylation_residuals/res_ct_chr/results_ct_hsq", jid, ".RData", sep="")
+savefile2 <- paste("~/repo/methylation_residuals/res_ct_chr/results_ct_pred", jid, ".RData", sep="")
 
 if(all(file.exists(c(savefile1, savefile2)))) q()
 
