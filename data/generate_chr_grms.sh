@@ -39,10 +39,14 @@ gcta64 --grm ${mothersout} --grm-cutoff 0.05 --make-grm --out ${mothersout}
 for i in {1..22}
 do
 	gcta64 --grm ${kidsout}${i} --keep ${kidsout}.grm.id --make-grm --out ${kidsout}${i}
+	echo ${kidsout}${i} > ${kidsout}${i}.mgrm
+	echo ${kidsout} >> ${kidsout}${i}.mgrm
 done
 
 for i in {1..22}
 do
 	gcta64 --grm ${mothersout}${i} --keep ${mothersout}.grm.id --make-grm --out ${mothersout}${i}
+	echo ${mothersout}${i} > ${mothersout}${i}.mgrm
+	echo ${mothersout} >> ${mothersout}${i}.mgrm
 done
 

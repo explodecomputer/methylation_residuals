@@ -12,7 +12,7 @@ getCisChr <- function(probeinfo, cpg)
 	return(probeinfo$CHR[probeinfo$TargetID == cpg][1])
 }
 
-runGcta <- function(grmroot, phenfile, outfile, flags="")
+runGcta <- function(cpg, grmroot, phenfile, outfile, flags="")
 {
 	chr <- getCisChr(probeinfo, cpg)
 	mgrmfile <- paste(grmroot, chr, ".mgrm", sep="")
@@ -79,12 +79,13 @@ for(i in first:last)
 	{
 		grmroot <- paste("~/repo/methylation_residuals/grms/", params$group[i], sep="")
 		allphenfile <- paste("~/repo/methylation_residuals/data/", params$timepoint[i], "norm.phen", sep="")
+		idfile <- paste("~/repo/methylation_residuals/data/", params$timepoint[i], ".id", sep="")
 
 		cisgrmfile <- outfile
 		phenfile <- paste(outfile, ".phen", sep="")
 
 		makePhen(allphenfile, idfile, params$index[i], phenfile)
-		runGcta(mgrmfile, phenfile, outfile)
+		runGcta(params$cpg[i], grmroot, phenfile, outfile)
 
 		nom[[j]] <- c(params$cpg[i], params$timepoint[i])
 		preds[[j]] <- readPreds(outfile)
