@@ -98,11 +98,10 @@ temp1 <- temp1[order(temp1$CPG, temp1$timepoint, temp1$experiment),]
 temp1a <- subset(temp1, experiment=="mQTL")
 temp1b <- subset(temp1, experiment!="mQTL")
 
-plot(temp1a$value ~ temp1b$value, alpha=0.1)
 temp1a$value2 <- temp1b$value
 
 ggplot(temp1a, aes(x=value2, y=value)) +
-geom_point(alpha=0.2) +
+geom_point() +
 facet_grid(keep ~ .) +
 labs(x="Cis SNP h2", y="Cis meQTL h2")
 ggsave(file="~/repo/methylation_residuals/images/cis_naeem.png")
