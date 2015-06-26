@@ -73,7 +73,7 @@ nom <- list()
 j <- 1
 for(i in first:last)
 {
-	cat(i, "\n")
+	cat("Running param", i, "\n")
 	outfile <- paste("~/repo/methylation_residuals/res_ct_chr/", params$timepoint[i], "/", params$cpg[i], sep="")
 	if(!file.exists(paste(outfile, ".hsq", sep="")) & params$cpg[i] %in% probeinfo$TargetID)
 	{

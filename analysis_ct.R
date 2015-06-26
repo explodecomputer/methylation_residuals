@@ -17,8 +17,8 @@ library(reshape2)
 
 load("~/repo/methylation_residuals/data/datl_v2.RData")
 load("~/repo/mQTL-partitioning/filter_run5_gwas/data/condanal_results.RData")
-naeem <- subset(condres, select=c(CPG, keep))
-datl <- merge(datl, naeem, by="CPG")
+# naeem <- subset(condres, select=c(CPG, keep))
+# datl <- merge(datl, naeem, by="CPG")
 
 # total h2 divided into cis and trans for each time point
 
@@ -54,6 +54,21 @@ labs(y="SNP heritability", x="", fill="")
 ggsave(file="~/repo/methylation_residuals/images/h2_partition_cistrans.pdf")
 
 
+
+# Effect of time on h2
+
+h2timedat <- subset(datl, variable=="Total" & experiment == "SNP heritability")
+h2timedat$age <- h2timedat$timepoint
+levels(h2timedat$age) <- c(0, 7, 15, 27.7, 47)
+h2timedat$age <- as.numeric(as.character(h2timedat$age))
+
+summary(lm(value ~ age, subset(h2timedat, timepoint != "Birth")))
+
+ggplot(subset(h2timedat, timepoint != "Birth"), aes(x=age, y=value)) +
+geom_boxplot(aes(group=age)) +
+stat_smooth(method="lm") +
+labs(x="Age", y="SNP heritability")
+ggsave(file="~/repo/methylation_residuals/images/h2_time.pdf")
 
 # is there a difference in SNP heritability for different genomic features
 
