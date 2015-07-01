@@ -65,9 +65,10 @@ h2timedat$age <- as.numeric(as.character(h2timedat$age))
 summary(lm(value ~ age, subset(h2timedat, timepoint != "Birth")))
 
 ggplot(subset(h2timedat, timepoint != "Birth"), aes(x=age, y=value)) +
-geom_boxplot(aes(group=age)) +
+geom_boxplot(aes(group=age), width=4) +
 stat_smooth(method="lm") +
-labs(x="Age", y="SNP heritability")
+labs(x="Age", y="SNP heritability") +
+geom_boxplot(data=subset(h2timedat, timepoint == "Birth"), aes(x=age, y=value), fill="grey", width=4)
 ggsave(file="~/repo/methylation_residuals/images/h2_time.pdf")
 
 # is there a difference in SNP heritability for different genomic features
