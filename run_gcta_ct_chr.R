@@ -1,10 +1,14 @@
-makePhen <- function(allphenfile, idfile, row, phenfile)
+makePhen <- function(allphenfile, idfile, row, phenfile, filesplits=1000)
 {
-	cmd <- paste("head -n ", row, " ", allphenfile, " | tail -n 1 | tr ' ' '\n' > ", phenfile, ".temp", sep="")
+	split <- sprintf("%03d", floor(row / filesplits))
+	newrow <- row %% filesplits
+	newfile <- paste(allphenfile, split, sep=".")
+	print(c(newfile, newrow))
+	cmd <- paste("head -n ", newrow, " ", newfile, " | tail -n 1 | tr ' ' '\n' > ", phenfile, ".temp", sep="")
 	system(cmd)
 	cmd <- paste("paste -d ' ' ", idfile, " ", phenfile, ".temp > ", phenfile, sep="")
 	system(cmd)
-	system(paste("rm ", phenfile, ".temp", sep=""))
+	# system(paste("rm ", phenfile, ".temp", sep=""))
 }
 
 getCisChr <- function(probeinfo, cpg)
@@ -47,7 +51,7 @@ readHsqs <- function(rootname)
 removeFiles <- function(rootname)
 {
 	a <- paste(rootname, c(".phen", ".hsq", ".indi.blp", ".log", ".grm.id", ".grm.bin", ".grm.N.bin", ".snplist", ".mgrm"), sep="")
-	unlink(a)
+	# unlink(a)
 }
 
 arguments <- commandArgs(T)
@@ -78,7 +82,7 @@ for(i in first:last)
 	if(!file.exists(paste(outfile, ".hsq", sep="")) & params$cpg[i] %in% probeinfo$TargetID)
 	{
 		grmroot <- paste("~/repo/methylation_residuals/grms/", params$group[i], sep="")
-		allphenfile <- paste("~/repo/methylation_residuals/data/", params$timepoint[i], "norm.phen", sep="")
+		allphenfile <- paste("~/repo/methylation_residuals/data/splitfiles/", params$timepoint[i], "norm.phen", sep="")
 		idfile <- paste("~/repo/methylation_residuals/data/", params$timepoint[i], ".id", sep="")
 
 		cisgrmfile <- outfile

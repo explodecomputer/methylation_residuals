@@ -3,11 +3,10 @@
 #PBS -N methres
 #PBS -o job_reports/methres-output
 #PBS -e job_reports/methres-error
-#PBS -t 1-2000
+#PBS -t 1801-1806
 #PBS -l walltime=12:00:00
-#PBS -l nodes=1:ppn=2
+#PBS -l nodes=1:ppn=1
 #PBS -S /bin/bash
-#PBS -q veryshort
 
 set -e
 
