@@ -102,12 +102,19 @@ qd2 <- subset(qd2, select=c(CPG, timepoint, Trans, varexp))
 qd <- rbind(qd, qd2)
 
 
-load("~/repo/methylation_residuals/hsq_ct_aries.RData")
 annot <- read.table("~/repo/methylation_residuals/data/annot.txt", sep="\t")
 annot <- subset(annot, select=c(V1, V8))
 names(annot) <- c("CPG", "Feature")
 
+load("~/repo/methylation_residuals/hsq_ct_aries.RData")
+dat_ct <- dat
+load("~/repo/methylation_residuals/hsq_ct_chr_aries.RData")
+dat_ct_chr <- dat
 
-datl <- harmoniseDat(qd, dat, annot)
+
+datl <- harmoniseDat(qd, dat_ct, annot)
+datl_chr <- harmoniseDat(qd, dat_ct_chr, annot)
+
 save(datl, file="~/repo/methylation_residuals/data/datl_v2.RData")
+save(datl_chr, file="~/repo/methylation_residuals/data/datl_chr_v2.RData")
 save(qd, file="~/repo/methylation_residuals/data/varexp.RData")
